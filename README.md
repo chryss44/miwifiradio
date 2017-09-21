@@ -35,10 +35,14 @@ All you are doing may or may not hurt your device and finally brick it :trollfac
 
 ```
 server {
-    listen      192.168.1.1:80;
+    listen 443 default_server;
+    listen [::]:443 default_server;
     server_name vpsXX.ximiraga.ru api.ximalaya.com;
     root        /zdata/www/miradio;
     index       index.php index.html index.htm;
+    ssl on;
+    ssl_certificate      /etc/ssl/certs/myssl.crt;
+    ssl_certificate_key  /etc/ssl/private/myssl.key;
 //  access_log  /var/log/nginx/radio_access.log;
 //  error_log   /var/log/nginx/radio_error.log;
     location @ximalaya {
@@ -56,6 +60,10 @@ server {
     }
 
     location /openapi-gateway-app/search/radios {
+    try_files $uri $uri/ /index.php;
+    }
+
+    location /openapi-gateway-app/ranks/radios {
     try_files $uri $uri/ /index.php;
     }
 
